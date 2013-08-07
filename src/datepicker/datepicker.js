@@ -289,9 +289,14 @@ function ($compile, $parse, $document, $position, dateFilter, datepickerPopupCon
       }
       ngModel.$parsers.push(parseDate);
 
+      //Backward compatibilty with 'open' attribute
+      if(angular.isDefined(attrs.open) && angular.isString(attrs.open) && !angular.isDefined(attrs.isOpen)) {
+        attrs.isOpen = attrs.open;
+      }
+
       var getIsOpen, setIsOpen;
-      if ( attrs.open ) {
-        getIsOpen = $parse(attrs.open);
+      if ( attrs.isOpen ) {
+        getIsOpen = $parse(attrs.isOpen);
         setIsOpen = getIsOpen.assign;
 
         originalScope.$watch(getIsOpen, function updateOpen(value) {
@@ -386,14 +391,18 @@ function ($compile, $parse, $document, $position, dateFilter, datepickerPopupCon
         scope.position.top = scope.position.top + element.prop('offsetHeight');
       }
 
+      var documentBindingInitialized = false;
       scope.$watch('isOpen', function(value) {
         if (value) {
           updatePosition();
           $document.bind('click', documentClickBind);
           element.unbind('focus', elementFocusBind);
           element[0].focus();
+          documentBindingInitialized = true;
         } else {
-          $document.unbind('click', documentClickBind);
+          if(documentBindingInitialized) {
+            $document.unbind('click', documentClickBind);
+          }
           element.bind('focus', elementFocusBind);
         }
 
