@@ -289,11 +289,6 @@ function ($compile, $parse, $document, $position, dateFilter, datepickerPopupCon
       }
       ngModel.$parsers.push(parseDate);
 
-      //Backward compatibilty with 'open' attribute
-      if(angular.isDefined(attrs.open) && angular.isString(attrs.open) && !angular.isDefined(attrs.isOpen)) {
-        attrs.isOpen = attrs.open;
-      }
-
       var getIsOpen, setIsOpen;
       if ( attrs.isOpen ) {
         getIsOpen = $parse(attrs.isOpen);
