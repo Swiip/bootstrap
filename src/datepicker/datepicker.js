@@ -386,12 +386,14 @@ function ($compile, $parse, $document, $position, dateFilter, datepickerPopupCon
         scope.position.top = scope.position.top + element.prop('offsetHeight');
       }
 
-      var documentBindingInitialized = false;
+      var documentBindingInitialized = false, elementFocusInitialized = false;
       scope.$watch('isOpen', function(value) {
         if (value) {
           updatePosition();
           $document.bind('click', documentClickBind);
-          element.unbind('focus', elementFocusBind);
+          if(elementFocusInitialized) {
+            element.unbind('focus', elementFocusBind);
+          }
           element[0].focus();
           documentBindingInitialized = true;
         } else {
@@ -399,6 +401,7 @@ function ($compile, $parse, $document, $position, dateFilter, datepickerPopupCon
             $document.unbind('click', documentClickBind);
           }
           element.bind('focus', elementFocusBind);
+          elementFocusInitialized = true;
         }
 
         if ( setIsOpen ) {
